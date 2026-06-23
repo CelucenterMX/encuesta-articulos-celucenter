@@ -656,7 +656,7 @@
     <div class="instruction-card" id="instruction">
       <span class="icon">💡</span>
       <span>
-        <strong>Cómo votar:</strong> Selecciona los artículos que te gustaría ver en tienda. Puedes votar por varios. Al terminar, oprime <strong>"Enviar mi selección"</strong>. <strong>Solo puedes votar una vez</strong> desde este dispositivo.
+        <strong>Cómo votar:</strong> Selecciona los artículos que te gustaría ver en tienda. Selecciona hasta <strong>3 artículos</strong> que te gustaría ver en tienda. Al terminar, oprime <strong>"Enviar mi selección"</strong>. <strong>Solo puedes votar una vez</strong> desde este dispositivo.
       </span>
     </div>
   </div>
@@ -669,12 +669,11 @@
   <!-- SUBMIT BAR -->
   <div class="submit-bar" id="submit-bar">
     <div class="submit-info">
-      <strong id="vote-count">0</strong> artículos seleccionados
+      <strong id="vote-count">0</strong> de <strong>3</strong> artículos seleccionados
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="submit-btn submit-btn-secondary" onclick="shareWhatsApp()" title="Mandar resumen por WhatsApp">
-        💬 WhatsApp
-      </button>
+      <!-- WhatsApp deshabilitado (descomentar para reactivar) -->
+      <!-- <button class="submit-btn submit-btn-secondary" onclick="shareWhatsApp()" title="Mandar resumen por WhatsApp">💬 WhatsApp</button> -->
       <button class="submit-btn" id="submit-btn" onclick="openSubmitModal()">
         📤 Enviar
       </button>
@@ -704,7 +703,8 @@
       <input type="text" class="name-input" id="voter-name" placeholder="Tu nombre (opcional)">
       <div class="modal-buttons">
         <button class="cancel" onclick="closeModal()">Cancelar</button>
-        <button class="whatsapp" onclick="shareWhatsApp()">💬 WhatsApp</button>
+        <!-- WhatsApp deshabilitado (descomentar para reactivar) -->
+        <!-- <button class="whatsapp" onclick="shareWhatsApp()">💬 WhatsApp</button> -->
         <button class="confirm" id="modal-confirm" onclick="confirmSubmit()">Enviar</button>
       </div>
     </div>
@@ -893,6 +893,9 @@
       const idx = state.votes.indexOf(id);
       if (idx >= 0) {
         state.votes.splice(idx, 1);
+      } else if (state.votes.length >= 3) {
+        showToast('Máximo 3 productos. Quita uno para agregar otro.', 'error');
+        return;
       } else {
         state.votes.push(id);
       }
@@ -908,12 +911,13 @@
         return;
       }
       const summary = document.getElementById('modal-summary');
-      summary.innerHTML = `Vas a enviar <strong>${state.votes.length}</strong> artículo${state.votes.length === 1 ? '' : 's'}. Después de enviar ya no podrás cambiar tu voto.<br><br>💡 <em>Tip: También puedes enviar tu selección por WhatsApp desde el botón de abajo.</em>`;
+      summary.innerHTML = `Vas a enviar <strong>${state.votes.length}</strong> artículo${state.votes.length === 1 ? '' : 's'}. Después de enviar ya no podrás cambiar tu voto.<br><br>💡 <em>Tip: Recuerda que solo puedes elegir hasta 3 productos.</em>`;
       document.getElementById('voter-name').value = state.voterName || '';
       document.getElementById('modal-bg').classList.add('visible');
     }
 
-    function buildShareText() {
+/* ⏸️ WhatsApp deshabilitado - descomentar para reactivar
+        function buildShareText() {
       const lines = ['🛍️ *Mi selección - Encuesta CeluCenter*\n'];
       if (state.voterName) lines.push(`👤 ${state.voterName}\n`);
       lines.push(`Artículos que quiero (${state.votes.length}):\n`);
@@ -934,6 +938,8 @@
       const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
       window.open(url, '_blank');
     }
+    */
+
 
     function closeModal() {
       document.getElementById('modal-bg').classList.remove('visible');
@@ -1039,11 +1045,13 @@
       bar.classList.add('visible');
       bar.innerHTML = `
         <div class="submit-info">
-          <strong>✓ Ya votaste</strong> · ${state.votes.length} artículo${state.votes.length === 1 ? '' : 's'}
+          <strong>✓ Ya votaste</strong> · ${state.votes.length} de 3 artículos
         </div>
+        <!-- WhatsApp deshabilitado (descomentar para reactivar)
         <button class="submit-btn submit-btn-secondary" onclick="shareWhatsApp()">
           💬 Compartir por WhatsApp
         </button>
+        -->
       `;
     }
 
