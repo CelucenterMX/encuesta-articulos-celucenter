@@ -43,3 +43,4 @@ const BACKEND_URL = 'https://api.jsonbin.io/v3/b/TU_BIN_ID';
 - HTML5 + CSS3 + Vanilla JS
 - Sin dependencias
 - Tamaño total: ~30KB + imágenes
+
