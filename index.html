@@ -724,7 +724,8 @@
     // ============================================
     const DEADLINE = new Date('2026-06-24T12:00:00'); // ⬅️ Fecha límite de la encuesta
     const STORAGE_KEY = 'celucenter_encuesta_v1';
-    const BACKEND_URL = ''; // ⬅️ Opcional: webhook (Bitrix24, Google Sheets, jsonbin.io) para集計 real
+    const BACKEND_URL = 'https://incontrovertibly-unportentous-hae.ngrok-free.dev/api/encuesta/vote'; // ⬅️ Backend del bot de kilometraje
+    const RESULTS_URL = 'https://incontrovertibly-unportentous-hae.ngrok-free.dev/api/encuesta/results'; // ⬅️ Endpoint de resultados en tiempo real
     const WHATSAPP_NUMBER = '523414386105'; // ⬅️ Número al que se manda el resumen por WhatsApp
 
     const PRODUCTS = [
@@ -945,10 +946,10 @@
       state.submittedAt = new Date().toISOString();
       saveState();
 
-      // Send to backend if configured
+      // Send to backend
       if (BACKEND_URL) {
         try {
-          await fetch(BACKEND_URL, {
+          const resp = await fetch(BACKEND_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -957,8 +958,12 @@
               timestamp: state.submittedAt,
             }),
           });
+          if (!resp.ok) throw new Error('Backend ' + resp.status);
+          const r = await resp.json();
+          showToast('¡Voto registrado! Total: ' + r.total_ballots, 'success');
         } catch (e) {
           console.warn('Backend submit failed', e);
+          showToast('Voto guardado localmente (sin conexión al servidor)', '');
         }
       }
 

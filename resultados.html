@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resultados en Vivo - Encuesta CeluCenter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #E31837;
+      --red-dark: #c01430;
+      --blue: #2AACE2;
+      --blue-dark: #1a8fc0;
+      --dark: #1A1A1A;
+      --gray-50: #F8F9FA;
+      --gray-100: #F1F3F5;
+      --gray-200: #E8E8E8;
+      --gray-300: #DEE2E6;
+      --gray-500: #ADB5BD;
+      --gray-700: #495057;
+      --gray-900: #212529;
+      --green: #2BB673;
+      --green-light: #D4F4E2;
+      --orange: #F5A623;
+      --gold: #FFD700;
+      --silver: #C0C0C0;
+      --bronze: #CD7F32;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--gray-50);
+      color: var(--dark);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #fff;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      padding: 0 24px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--red), var(--red-dark));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .brand-text { line-height: 1.1; }
+    .brand-text .name { font-size: 17px; font-weight: 700; color: var(--dark); }
+    .brand-text .name span { color: var(--red); }
+    .brand-text .sub { font-size: 11px; color: #888; }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .live-badge.live {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .live-badge.stale {
+      background: #FEE2E2;
+      color: var(--red);
+    }
+
+    .live-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .live-badge.stale .dot {
+      background: var(--red);
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    .back-link {
+      padding: 8px 16px;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .back-link:hover { background: var(--blue-dark); }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #1F4E78 0%, var(--blue) 100%);
+      color: #fff;
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 2em;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .hero p {
+      font-size: 0.95em;
+      opacity: 0.9;
+    }
+
+    /* ===== STATS BAR ===== */
+    .stats-bar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 24px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 2em;
+      font-weight: 800;
+      color: var(--blue);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    .stat-card.leader .stat-num { color: var(--green); }
+
+    /* ===== COUNTDOWN ===== */
+    .countdown-bar {
+      max-width: 1200px;
+      margin: 16px auto 0;
+      padding: 0 24px;
+    }
+
+    .countdown-wrap {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .countdown-label {
+      font-size: 13px;
+      color: var(--gray-700);
+      font-weight: 500;
+    }
+
+    .countdown {
+      display: flex;
+      gap: 8px;
+    }
+
+    .countdown-unit {
+      background: var(--dark);
+      color: #fff;
+      border-radius: 8px;
+      padding: 8px 12px;
+      min-width: 56px;
+      text-align: center;
+    }
+
+    .countdown-unit .num {
+      font-size: 1.4em;
+      font-weight: 700;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown-unit .lbl {
+      font-size: 9px;
+      text-transform: uppercase;
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+    }
+
+    .countdown.urgent .countdown-unit { background: var(--red); }
+
+    /* ===== PODIUM ===== */
+    .podium {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 24px;
+    }
+
+    .podium-card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .podium-header {
+      background: linear-gradient(135deg, var(--green), #1f8d57);
+      color: #fff;
+      padding: 22px 26px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .podium-header .trophy { font-size: 28px; }
+    .podium-header h2 { font-size: 1.2em; font-weight: 700; }
+    .podium-header p { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+
+    .podium-list {
+      padding: 16px 26px 26px;
+    }
+
+    .podium-item {
+      display: grid;
+      grid-template-columns: 50px 90px 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .podium-item:last-child { border-bottom: none; }
+
+    .podium-item.gold { background: linear-gradient(90deg, rgba(255,215,0,0.08), transparent); border-radius: 8px; padding: 14px 12px; margin: 0 -12px; }
+    .podium-item.silver { background: linear-gradient(90deg, rgba(192,192,192,0.08), transparent); border-radius: 8px; padding: 14px 12px; margin: 0 -12px; }
+    .podium-item.bronze { background: linear-gradient(90deg, rgba(205,127,50,0.08), transparent); border-radius: 8px; padding: 14px 12px; margin: 0 -12px; }
+
+    .podium-rank {
+      width: 42px;
+      height: 42px;
+      background: var(--gray-100);
+      color: var(--gray-700);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .podium-item.gold .podium-rank { background: var(--gold); color: #fff; box-shadow: 0 2px 8px rgba(255,215,0,0.4); }
+    .podium-item.silver .podium-rank { background: var(--silver); color: #fff; }
+    .podium-item.bronze .podium-rank { background: var(--bronze); color: #fff; }
+
+    .podium-thumb {
+      width: 90px;
+      height: 90px;
+      background: var(--gray-50);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 4px;
+    }
+
+    .podium-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    .podium-info { min-width: 0; }
+
+    .podium-code {
+      font-size: 11px;
+      color: var(--blue);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .podium-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--dark);
+      margin-top: 2px;
+    }
+
+    .podium-price {
+      font-size: 12px;
+      color: var(--red);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .podium-bar {
+      margin-top: 6px;
+      height: 4px;
+      background: var(--gray-100);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .podium-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      transition: width 0.5s ease;
+    }
+
+    .podium-votes {
+      text-align: right;
+    }
+
+    .podium-votes .count {
+      font-size: 1.6em;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+    }
+
+    .podium-votes .label {
+      font-size: 10px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .podium-item.gold .podium-votes .count { color: #b8941f; }
+    .podium-item.silver .podium-votes .count { color: #888; }
+    .podium-item.bronze .podium-votes .count { color: #a06535; }
+
+    /* ===== EMPTY STATE ===== */
+    .empty {
+      max-width: 600px;
+      margin: 60px auto;
+      padding: 40px 30px;
+      text-align: center;
+      color: #888;
+    }
+
+    .empty .icon { font-size: 60px; margin-bottom: 16px; }
+    .empty h3 { font-size: 1.2em; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
+    .empty p { font-size: 14px; }
+
+    /* ===== VOTERS LIST ===== */
+    .voters-section {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 24px;
+    }
+
+    .voters-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      padding: 20px 24px;
+    }
+
+    .voters-card h3 {
+      font-size: 1em;
+      color: var(--dark);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .voters-list {
+      max-height: 240px;
+      overflow-y: auto;
+      font-size: 13px;
+    }
+
+    .voter-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .voter-row:last-child { border-bottom: none; }
+    .voter-name { font-weight: 500; }
+    .voter-meta { color: #888; font-size: 12px; }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 22px 24px;
+      font-size: 13px;
+      margin-top: 50px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 640px) {
+      .header { padding: 0 16px; }
+      .hero { padding: 30px 16px; }
+      .hero h1 { font-size: 1.4em; }
+      .stats-bar { padding: 16px 16px 0; }
+      .podium-item { grid-template-columns: 36px 60px 1fr auto; gap: 10px; }
+      .podium-thumb { width: 60px; height: 60px; }
+      .podium-votes .count { font-size: 1.3em; }
+      .voters-section { padding: 0 16px; }
+      .countdown-bar { padding: 0 16px; }
+      .back-link { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <a href="index.html" class="brand">
+      <div class="brand-icon">📊</div>
+      <div class="brand-text">
+        <div class="name">Celu<span>Center</span></div>
+        <div class="sub">Resultados en vivo</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <div class="live-badge" id="live-badge">
+        <span class="dot"></span>
+        <span id="live-text">En vivo</span>
+      </div>
+      <a href="index.html" class="back-link">← Volver a votar</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>📊 Resultados en Tiempo Real</h1>
+    <p>Vea qué artículos prefieren los gerentes para la próxima compra</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-voters">0</div>
+      <div class="stat-label">Votantes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-products">13</div>
+      <div class="stat-label">Productos</div>
+    </div>
+    <div class="stat-card leader">
+      <div class="stat-num" id="stat-leader">—</div>
+      <div class="stat-label">Líder actual</div>
+    </div>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown-bar">
+    <div class="countdown-wrap">
+      <span class="countdown-label">⏰ Cierra en:</span>
+      <div class="countdown" id="countdown">
+        <div class="countdown-unit"><div class="num" id="cd-d">00</div><div class="lbl">Días</div></div>
+        <div class="countdown-unit"><div class="num" id="cd-h">00</div><div class="lbl">Hrs</div></div>
+        <div class="countdown-unit"><div class="num" id="cd-m">00</div><div class="lbl">Min</div></div>
+        <div class="countdown-unit"><div class="num" id="cd-s">00</div><div class="lbl">Seg</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PODIUM -->
+  <div id="podium-container"></div>
+
+  <!-- VOTERS -->
+  <div class="voters-section" id="voters-section" style="display:none;">
+    <div class="voters-card">
+      <h3>👥 Quién ha votado (<span id="voter-count">0</span>)</h3>
+      <div class="voters-list" id="voters-list"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    CeluCenter © 2024 &nbsp;|&nbsp; Resultados de la encuesta interna &nbsp;|&nbsp; Auto-actualiza cada 5 segundos
+  </div>
+
+  <script>
+    // ============================================
+    // CONFIG
+    // ============================================
+    const DEADLINE = new Date('2026-06-24T12:00:00');
+    const RESULTS_URL = 'https://incontrovertibly-unportentous-hae.ngrok-free.dev/api/encuesta/results';
+    const REFRESH_MS = 5000;
+    const IMAGE_BASE = '';
+
+    // ============================================
+    // STATE
+    // ============================================
+    let lastUpdate = null;
+    let refreshTimer = null;
+    let isStale = false;
+
+    // ============================================
+    // FETCH
+    // ============================================
+    async function fetchResults() {
+      try {
+        const resp = await fetch(RESULTS_URL, { cache: 'no-store' });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        if (!data.ok) throw new Error('Backend not ok');
+        render(data);
+        setLive(true);
+        lastUpdate = new Date();
+        document.getElementById('live-text').textContent = 'En vivo · ' + lastUpdate.toLocaleTimeString('es-MX');
+      } catch (e) {
+        console.warn('fetchResults error:', e);
+        setLive(false);
+        document.getElementById('live-text').textContent = 'Sin conexión';
+      }
+    }
+
+    function setLive(live) {
+      const badge = document.getElementById('live-badge');
+      const text = document.getElementById('live-text');
+      if (live) {
+        badge.classList.remove('stale');
+        badge.classList.add('live');
+        isStale = false;
+      } else {
+        badge.classList.add('stale');
+        badge.classList.remove('live');
+        isStale = true;
+      }
+    }
+
+    // ============================================
+    // RENDER
+    // ============================================
+    function render(data) {
+      // Stats
+      document.getElementById('stat-voters').textContent = data.total_ballots;
+
+      // Build ranking
+      const tallies = data.tallies || {};
+      const products = data.products || [];
+      const productMap = Object.fromEntries(products.map(p => [p.id, p]));
+
+      const sorted = Object.entries(tallies)
+        .filter(([id, count]) => count > 0)
+        .sort((a, b) => b[1] - a[1]);
+
+      // Update "Líder actual"
+      const leaderEl = document.getElementById('stat-leader');
+      if (sorted.length > 0) {
+        leaderEl.textContent = sorted[0][0];
+      } else {
+        leaderEl.textContent = '—';
+      }
+
+      // Render podium
+      const container = document.getElementById('podium-container');
+      if (sorted.length === 0) {
+        container.innerHTML = `
+          <div class="empty">
+            <div class="icon">⏳</div>
+            <h3>Aún no hay votos</h3>
+            <p>Cuando los gerentes empiecen a votar, verás los resultados aquí en tiempo real.</p>
+          </div>
+        `;
+        document.getElementById('voters-section').style.display = 'none';
+        return;
+      }
+
+      const maxVotes = sorted[0][1];
+
+      const podiumItems = sorted.map(([id, count], idx) => {
+        const p = productMap[id];
+        if (!p) return '';
+        const medal = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
+        const rank = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : (idx + 1);
+        const pct = maxVotes > 0 ? (count / maxVotes) * 100 : 0;
+        return `
+          <div class="podium-item ${medal}">
+            <div class="podium-rank">${rank}</div>
+            <div class="podium-thumb">
+              <img src="${IMAGE_BASE}images/${id}.jpg" alt="${id}" onerror="this.style.display='none'">
+            </div>
+            <div class="podium-info">
+              <div class="podium-code">${id}</div>
+              <div class="podium-name">${p.name}</div>
+              <div class="podium-price">$${p.price.toFixed(2)} mayoreo</div>
+              <div class="podium-bar"><div class="podium-bar-fill" style="width:${pct}%"></div></div>
+            </div>
+            <div class="podium-votes">
+              <div class="count">${count}</div>
+              <div class="label">${count === 1 ? 'voto' : 'votos'}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="podium">
+          <div class="podium-card">
+            <div class="podium-header">
+              <span class="trophy">🏆</span>
+              <div>
+                <h2>Ranking de preferencias</h2>
+                <p>${sorted.length} de 13 productos con votos</p>
+              </div>
+            </div>
+            <div class="podium-list">${podiumItems}</div>
+          </div>
+        </div>
+      `;
+
+      // Voters list (only if data has them)
+      if (data.voters && data.voters.length > 0) {
+        document.getElementById('voters-section').style.display = 'block';
+        document.getElementById('voter-count').textContent = data.voters.length;
+        const votersList = document.getElementById('voters-list');
+        votersList.innerHTML = data.voters.map(v => {
+          const when = new Date(v.ts).toLocaleString('es-MX', {
+            day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+          });
+          return `
+            <div class="voter-row">
+              <span class="voter-name">👤 ${v.name} <span class="voter-meta">· ${v.votes.length} producto${v.votes.length === 1 ? '' : 's'}</span></span>
+              <span class="voter-meta">${when}</span>
+            </div>
+          `;
+        }).reverse().join('');
+      }
+    }
+
+    // ============================================
+    // COUNTDOWN
+    // ============================================
+    function isClosed() {
+      return new Date() >= DEADLINE;
+    }
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = DEADLINE - now;
+      const cd = document.getElementById('countdown');
+
+      if (diff <= 0) {
+        document.getElementById('cd-d').textContent = '00';
+        document.getElementById('cd-h').textContent = '00';
+        document.getElementById('cd-m').textContent = '00';
+        document.getElementById('cd-s').textContent = '00';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hrs = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const min = Math.floor((diff / (1000 * 60)) % 60);
+      const sec = Math.floor((diff / 1000) % 60);
+
+      document.getElementById('cd-d').textContent = String(days).padStart(2, '0');
+      document.getElementById('cd-h').textContent = String(hrs).padStart(2, '0');
+      document.getElementById('cd-m').textContent = String(min).padStart(2, '0');
+      document.getElementById('cd-s').textContent = String(sec).padStart(2, '0');
+
+      if (days === 0 && hrs < 24) {
+        cd.classList.add('urgent');
+      }
+    }
+
+    // ============================================
+    // INIT
+    // ============================================
+    fetchResults();
+    updateCountdown();
+    setInterval(() => {
+      fetchResults();
+      updateCountdown();
+    }, REFRESH_MS);
+  </script>
+</body>
+</html>
