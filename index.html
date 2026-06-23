@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encuesta de Artículos - CeluCenter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #E31837;
+      --red-dark: #c01430;
+      --blue: #2AACE2;
+      --blue-dark: #1a8fc0;
+      --dark: #1A1A1A;
+      --gray-50: #F8F9FA;
+      --gray-100: #F1F3F5;
+      --gray-200: #E8E8E8;
+      --gray-300: #DEE2E6;
+      --gray-500: #ADB5BD;
+      --gray-700: #495057;
+      --gray-900: #212529;
+      --green: #2BB673;
+      --green-light: #D4F4E2;
+      --orange: #F5A623;
+      --orange-light: #FFF4E0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--gray-50);
+      color: var(--dark);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #fff;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      padding: 0 24px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--red), var(--red-dark));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .brand-text { line-height: 1.1; }
+    .brand-text .name { font-size: 17px; font-weight: 700; color: var(--dark); }
+    .brand-text .name span { color: var(--red); }
+    .brand-text .sub { font-size: 11px; color: #888; }
+
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-light);
+      color: var(--green);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .header-status.closed {
+      background: #FEE2E2;
+      color: var(--red);
+    }
+
+    .header-status .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .header-status.closed .dot {
+      background: var(--red);
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #1F4E78 0%, var(--blue) 100%);
+      color: #fff;
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 1.9em;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .hero p {
+      font-size: 0.95em;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ===== COUNTDOWN ===== */
+    .countdown-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .countdown-label {
+      font-size: 13px;
+      color: var(--gray-700);
+      font-weight: 500;
+    }
+
+    .countdown {
+      display: flex;
+      gap: 8px;
+    }
+
+    .countdown-unit {
+      background: var(--dark);
+      color: #fff;
+      border-radius: 8px;
+      padding: 8px 12px;
+      min-width: 56px;
+      text-align: center;
+    }
+
+    .countdown-unit .num {
+      font-size: 1.4em;
+      font-weight: 700;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown-unit .lbl {
+      font-size: 9px;
+      text-transform: uppercase;
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+    }
+
+    .countdown.urgent .countdown-unit { background: var(--red); }
+
+    /* ===== INSTRUCTIONS ===== */
+    .instructions {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 24px;
+    }
+
+    .instruction-card {
+      background: var(--orange-light);
+      border-left: 4px solid var(--orange);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      font-size: 13px;
+      color: #7A5500;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .instruction-card .icon { font-size: 18px; }
+
+    .instruction-card strong { color: var(--orange); }
+
+    /* ===== GRID ===== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+    .product {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s ease;
+      border: 2px solid transparent;
+      position: relative;
+    }
+
+    .product:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+
+    .product.voted {
+      border-color: var(--green);
+    }
+
+    .product.voted::before {
+      content: '✓';
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 28px;
+      height: 28px;
+      background: var(--green);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      z-index: 2;
+      box-shadow: 0 2px 6px rgba(43, 182, 115, 0.4);
+    }
+
+    .product-img {
+      background: var(--gray-50);
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 8px;
+    }
+
+    .product-img img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .product-body {
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 6px;
+    }
+
+    .product-code {
+      font-size: 11px;
+      color: var(--blue);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .product-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    .product-meta {
+      font-size: 11px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .product-price {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--red);
+      margin-top: 6px;
+    }
+
+    .product-vote {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border: 2px solid var(--blue);
+      background: #fff;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .product-vote:hover:not(:disabled) {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .product-vote.voted {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    .product-vote:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .product-vote .icon { font-size: 15px; }
+
+    /* ===== SUBMIT BAR ===== */
+    .submit-bar {
+      position: sticky;
+      bottom: 16px;
+      max-width: 600px;
+      margin: 24px auto 0;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      padding: 16px 20px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      z-index: 20;
+      flex-wrap: wrap;
+    }
+
+    .submit-bar.visible { display: flex; }
+
+    .submit-info {
+      font-size: 13px;
+      color: var(--gray-700);
+    }
+
+    .submit-info strong { color: var(--dark); font-size: 15px; }
+
+    .submit-btn {
+      padding: 10px 22px;
+      background: linear-gradient(135deg, var(--red), var(--red-dark));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .submit-btn:hover { box-shadow: 0 4px 16px rgba(227, 24, 55, 0.35); transform: translateY(-1px); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .submit-btn-secondary {
+      background: linear-gradient(135deg, var(--green), #1f8d57);
+    }
+    .submit-btn-secondary:hover {
+      box-shadow: 0 4px 16px rgba(43, 182, 115, 0.4);
+    }
+
+    /* ===== RESULTS ===== */
+    .results {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 24px;
+      display: none;
+    }
+
+    .results.visible { display: block; }
+
+    .results-card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .results-header {
+      background: linear-gradient(135deg, var(--green), #1f8d57);
+      color: #fff;
+      padding: 22px 26px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .results-header .trophy { font-size: 28px; }
+    .results-header h2 { font-size: 1.2em; font-weight: 700; }
+    .results-header p { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+
+    .results-list {
+      padding: 16px 26px 26px;
+    }
+
+    .result-item {
+      display: grid;
+      grid-template-columns: 40px 80px 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .result-item:last-child { border-bottom: none; }
+
+    .result-rank {
+      width: 36px;
+      height: 36px;
+      background: var(--gray-100);
+      color: var(--gray-700);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .result-item:nth-child(1) .result-rank { background: #FFD700; color: #fff; }
+    .result-item:nth-child(2) .result-rank { background: #C0C0C0; color: #fff; }
+    .result-item:nth-child(3) .result-rank { background: #CD7F32; color: #fff; }
+
+    .result-thumb {
+      width: 80px;
+      height: 80px;
+      background: var(--gray-50);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 4px;
+    }
+
+    .result-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    .result-info { min-width: 0; }
+
+    .result-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--dark);
+    }
+
+    .result-code {
+      font-size: 11px;
+      color: var(--blue);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .result-votes {
+      text-align: right;
+    }
+
+    .result-votes .count {
+      font-size: 1.4em;
+      font-weight: 700;
+      color: var(--green);
+      line-height: 1;
+    }
+
+    .result-votes .label {
+      font-size: 10px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-bg.visible { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 14px;
+      max-width: 420px;
+      width: 100%;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal .icon { font-size: 48px; margin-bottom: 12px; }
+    .modal h3 { font-size: 1.2em; font-weight: 700; margin-bottom: 8px; }
+    .modal p { font-size: 14px; color: var(--gray-700); margin-bottom: 20px; }
+
+    .modal .name-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      margin-bottom: 16px;
+    }
+
+    .modal .name-input:focus { outline: none; border-color: var(--blue); }
+
+    .modal-buttons { display: flex; gap: 10px; }
+
+    .modal-buttons button {
+      flex: 1;
+      padding: 11px 18px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+
+    .modal-buttons .cancel { background: var(--gray-100); color: var(--gray-700); }
+    .modal-buttons .cancel:hover { background: var(--gray-200); }
+
+    .modal-buttons .confirm { background: linear-gradient(135deg, var(--red), var(--red-dark)); color: #fff; }
+    .modal-buttons .confirm:hover { box-shadow: 0 4px 16px rgba(227, 24, 55, 0.35); }
+    .modal-buttons .whatsapp { background: linear-gradient(135deg, var(--green), #1f8d57); color: #fff; }
+    .modal-buttons .whatsapp:hover { box-shadow: 0 4px 16px rgba(43, 182, 115, 0.4); }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--dark);
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 200;
+      transition: transform 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .toast.visible { transform: translateX(-50%) translateY(0); }
+    .toast.success { background: var(--green); }
+    .toast.error { background: var(--red); }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 22px 24px;
+      font-size: 13px;
+      margin-top: 50px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 640px) {
+      .header { padding: 0 16px; }
+      .hero { padding: 30px 16px; }
+      .hero h1 { font-size: 1.4em; }
+      .container { padding: 16px; }
+      .countdown-bar { padding: 14px 16px; }
+      .countdown-unit { min-width: 48px; padding: 6px 8px; }
+      .countdown-unit .num { font-size: 1.1em; }
+      .products { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+      .product-body { padding: 10px 12px 12px; }
+      .product-name { font-size: 12px; }
+      .product-price { font-size: 16px; }
+      .product-vote { padding: 8px 10px; font-size: 12px; }
+      .submit-bar { flex-direction: column; align-items: stretch; text-align: center; }
+      .result-item { grid-template-columns: 32px 60px 1fr auto; gap: 10px; }
+      .result-thumb { width: 60px; height: 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="brand">
+      <div class="brand-icon">📱</div>
+      <div class="brand-text">
+        <div class="name">Celu<span>Center</span></div>
+        <div class="sub">Encuesta de Artículos</div>
+      </div>
+    </div>
+    <div class="header-status" id="header-status">
+      <span class="dot"></span>
+      <span id="status-text">Encuesta abierta</span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>🛍️ ¿Qué te gustaría que compremos?</h1>
+    <p>Vota por los artículos que quieres ver en las tiendas. Encuesta abierta hasta el <strong>24 de junio a las 12:00 PM</strong>.</p>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown-bar">
+    <span class="countdown-label">⏰ Cierra en:</span>
+    <div class="countdown" id="countdown">
+      <div class="countdown-unit"><div class="num" id="cd-d">00</div><div class="lbl">Días</div></div>
+      <div class="countdown-unit"><div class="num" id="cd-h">00</div><div class="lbl">Hrs</div></div>
+      <div class="countdown-unit"><div class="num" id="cd-m">00</div><div class="lbl">Min</div></div>
+      <div class="countdown-unit"><div class="num" id="cd-s">00</div><div class="lbl">Seg</div></div>
+    </div>
+  </div>
+
+  <!-- INSTRUCTIONS -->
+  <div class="instructions">
+    <div class="instruction-card" id="instruction">
+      <span class="icon">💡</span>
+      <span>
+        <strong>Cómo votar:</strong> Selecciona los artículos que te gustaría ver en tienda. Puedes votar por varios. Al terminar, oprime <strong>"Enviar mi selección"</strong>. <strong>Solo puedes votar una vez</strong> desde este dispositivo.
+      </span>
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="container">
+    <div class="products" id="products"></div>
+  </div>
+
+  <!-- SUBMIT BAR -->
+  <div class="submit-bar" id="submit-bar">
+    <div class="submit-info">
+      <strong id="vote-count">0</strong> artículos seleccionados
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="submit-btn submit-btn-secondary" onclick="shareWhatsApp()" title="Mandar resumen por WhatsApp">
+        💬 WhatsApp
+      </button>
+      <button class="submit-btn" id="submit-btn" onclick="openSubmitModal()">
+        📤 Enviar
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+    <div class="results-card">
+      <div class="results-header">
+        <span class="trophy">🏆</span>
+        <div>
+          <h2>Resultados finales</h2>
+          <p>Lo que más gustó a los gerentes</p>
+        </div>
+      </div>
+      <div class="results-list" id="results-list"></div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="icon">📋</div>
+      <h3>Confirma tu selección</h3>
+      <p id="modal-summary">Vas a enviar 0 artículos. Después de enviar ya no podrás cambiar tu voto.</p>
+      <input type="text" class="name-input" id="voter-name" placeholder="Tu nombre (opcional)">
+      <div class="modal-buttons">
+        <button class="cancel" onclick="closeModal()">Cancelar</button>
+        <button class="whatsapp" onclick="shareWhatsApp()">💬 WhatsApp</button>
+        <button class="confirm" id="modal-confirm" onclick="confirmSubmit()">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    CeluCenter © 2024 &nbsp;|&nbsp; Encuesta interna de selección de artículos
+  </div>
+
+  <script>
+    // ============================================
+    // CONFIG
+    // ============================================
+    const DEADLINE = new Date('2026-06-24T12:00:00'); // ⬅️ Fecha límite de la encuesta
+    const STORAGE_KEY = 'celucenter_encuesta_v1';
+    const BACKEND_URL = ''; // ⬅️ Opcional: webhook (Bitrix24, Google Sheets, jsonbin.io) para集計 real
+    const WHATSAPP_NUMBER = '523414386105'; // ⬅️ Número al que se manda el resumen por WhatsApp
+
+    const PRODUCTS = [
+      { id: 'ZB-033', name: 'Set Reloj + Pulsera Hombre', desc: 'Reloj con correa verde + pulsera acero', price: 39, img: 'images/ZB-033.jpg' },
+      { id: 'ZB-035', name: 'Set Reloj + Pulsera Hombre', desc: 'Reloj con esfera azul + pulsera piel', price: 39, img: 'images/ZB-035.jpg' },
+      { id: 'ZB-036', name: 'Set Reloj + Pulsera Hombre', desc: 'Reloj con correa café + pulsera decorativa', price: 39, img: 'images/ZB-036.jpg' },
+      { id: 'ZB-037', name: 'Set Reloj + Pulsera Mujer', desc: 'Reloj rose gold con gema verde + pulsera leaf', price: 47, img: 'images/ZB-037.jpg' },
+      { id: 'ZB-038', name: 'Set Reloj + Pulsera Mujer', desc: 'Reloj green + pulsera rose gold con cristales', price: 40, img: 'images/ZB-038.jpg' },
+      { id: 'ZB-039', name: 'Set Reloj + Pulsera Mujer', desc: 'Reloj negro + pulsera rose gold con cristales', price: 40, img: 'images/ZB-039.jpg' },
+      { id: 'ZB-050', name: 'Set Reloj + Pulsera Mujer', desc: 'Reloj rojo con corazón + pulsera rose gold', price: 40, img: 'images/ZB-050.jpg' },
+      { id: 'ZB-051', name: 'Set Reloj + Pulsera Mujer', desc: 'Reloj nude con mariposa + pulsera rose gold', price: 40, img: 'images/ZB-051.jpg' },
+      { id: 'ZB-052', name: 'Set Reloj + Pulsera Mujer', desc: 'Reloj rosa con cristales + pulsera a juego', price: 38, img: 'images/ZB-052.jpg' },
+      { id: 'ZB-053', name: 'Set Reloj + Pulsera Mujer', desc: 'Reloj rosa nude + pulsera a juego', price: 40, img: 'images/ZB-053.jpg' },
+      { id: 'ZB-056', name: 'Set Joyería Mujer (5 pzas)', desc: 'Reloj + collar + pulsera + anillo + aretes con gema verde', price: 53, img: 'images/ZB-056.jpg' },
+      { id: 'ZB-057', name: 'Set Reloj + Pulsera Hombre', desc: 'Reloj negro con esfera azul + pulsera piel negra', price: 39, img: 'images/ZB-057.jpg' },
+      { id: 'GTS-1345', name: 'Bocina Bluetooth 3"', desc: 'TWS, radio FM, LED, USB, Micro SD, batería recargable', price: 27, img: 'images/GTS-1345.jpg' },
+    ];
+
+    // ============================================
+    // STATE
+    // ============================================
+    let state = {
+      votes: [],
+      submitted: false,
+      voterName: '',
+      submittedAt: null,
+    };
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) state = { ...state, ...JSON.parse(saved) };
+      } catch (e) {
+        console.warn('Could not load state', e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.warn('Could not save state', e);
+      }
+    }
+
+    // ============================================
+    // RENDER
+    // ============================================
+    function renderProducts() {
+      const grid = document.getElementById('products');
+      grid.innerHTML = '';
+      const closed = isClosed();
+      PRODUCTS.forEach(p => {
+        const voted = state.votes.includes(p.id);
+        const card = document.createElement('div');
+        card.className = 'product' + (voted ? ' voted' : '');
+        card.innerHTML = `
+          <div class="product-img"><img src="${p.img}" alt="${p.id}" loading="lazy"></div>
+          <div class="product-body">
+            <div class="product-code">${p.id}</div>
+            <div class="product-name">${p.name}</div>
+            <div class="product-meta">${p.desc}</div>
+            <div class="product-price">$${p.price.toFixed(2)}</div>
+            <button class="product-vote ${voted ? 'voted' : ''}"
+                    onclick="toggleVote('${p.id}')"
+                    ${state.submitted || closed ? 'disabled' : ''}>
+              <span class="icon">${voted ? '✓' : '🤍'}</span>
+              <span>${voted ? 'Seleccionado' : 'Lo quiero'}</span>
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function renderSubmitBar() {
+      const bar = document.getElementById('submit-bar');
+      const closed = isClosed();
+      if (state.submitted || closed || state.votes.length === 0) {
+        bar.classList.remove('visible');
+        return;
+      }
+      bar.classList.add('visible');
+      document.getElementById('vote-count').textContent = state.votes.length;
+    }
+
+    function renderResults() {
+      if (!isClosed()) return;
+      const results = document.getElementById('results');
+      const list = document.getElementById('results-list');
+      const tallies = countAllVotes();
+      const sorted = Object.entries(tallies).sort((a, b) => b[1] - a[1]);
+
+      if (sorted.length === 0) {
+        list.innerHTML = '<p style="text-align:center;padding:30px;color:#888;">Aún no hay votos registrados.</p>';
+      } else {
+        list.innerHTML = sorted.map(([id, count], idx) => {
+          const p = PRODUCTS.find(x => x.id === id);
+          if (!p) return '';
+          return `
+            <div class="result-item">
+              <div class="result-rank">${idx + 1}</div>
+              <div class="result-thumb"><img src="${p.img}" alt="${p.id}"></div>
+              <div class="result-info">
+                <div class="result-code">${p.id}</div>
+                <div class="result-name">${p.name} · $${p.price.toFixed(2)}</div>
+              </div>
+              <div class="result-votes">
+                <div class="count">${count}</div>
+                <div class="label">${count === 1 ? 'voto' : 'votos'}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      results.classList.add('visible');
+    }
+
+    function renderAll() {
+      renderProducts();
+      renderSubmitBar();
+      renderResults();
+      renderStatus();
+    }
+
+    function renderStatus() {
+      const closed = isClosed();
+      const status = document.getElementById('header-status');
+      const text = document.getElementById('status-text');
+      if (state.submitted && !closed) {
+        text.textContent = '✓ Ya votaste';
+        status.classList.add('closed');
+        status.querySelector('.dot').style.animation = 'none';
+      } else if (closed) {
+        text.textContent = '🔒 Encuesta cerrada';
+        status.classList.add('closed');
+        status.querySelector('.dot').style.animation = 'none';
+      } else {
+        text.textContent = 'Encuesta abierta';
+        status.classList.remove('closed');
+        status.querySelector('.dot').style.animation = '';
+      }
+
+      // Hide instructions if submitted
+      const instr = document.getElementById('instruction');
+      if (state.submitted) {
+        instr.innerHTML = '<span class="icon">✅</span><span><strong>¡Gracias por votar!</strong> Ya registraste tu selección. Los resultados se mostrarán al cierre de la encuesta.</span>';
+      } else if (isClosed()) {
+        instr.style.display = 'none';
+      }
+    }
+
+    // ============================================
+    // VOTING
+    // ============================================
+    function toggleVote(id) {
+      if (state.submitted) {
+        showToast('Ya enviaste tu selección', 'error');
+        return;
+      }
+      if (isClosed()) {
+        showToast('La encuesta ya cerró', 'error');
+        return;
+      }
+      const idx = state.votes.indexOf(id);
+      if (idx >= 0) {
+        state.votes.splice(idx, 1);
+      } else {
+        state.votes.push(id);
+      }
+      saveState();
+      renderProducts();
+      renderSubmitBar();
+    }
+
+    function openSubmitModal() {
+      if (state.submitted) return;
+      if (state.votes.length === 0) {
+        showToast('Selecciona al menos un artículo', 'error');
+        return;
+      }
+      const summary = document.getElementById('modal-summary');
+      summary.innerHTML = `Vas a enviar <strong>${state.votes.length}</strong> artículo${state.votes.length === 1 ? '' : 's'}. Después de enviar ya no podrás cambiar tu voto.<br><br>💡 <em>Tip: También puedes enviar tu selección por WhatsApp desde el botón de abajo.</em>`;
+      document.getElementById('voter-name').value = state.voterName || '';
+      document.getElementById('modal-bg').classList.add('visible');
+    }
+
+    function buildShareText() {
+      const lines = ['🛍️ *Mi selección - Encuesta CeluCenter*\n'];
+      if (state.voterName) lines.push(`👤 ${state.voterName}\n`);
+      lines.push(`Artículos que quiero (${state.votes.length}):\n`);
+      state.votes.forEach((id, i) => {
+        const p = PRODUCTS.find(x => x.id === id);
+        if (p) lines.push(`${i+1}. ${id} - ${p.name} - $${p.price}`);
+      });
+      lines.push('\n— Enviado desde la encuesta interna');
+      return lines.join('\n');
+    }
+
+    function shareWhatsApp() {
+      if (state.votes.length === 0) {
+        showToast('Selecciona al menos un artículo', 'error');
+        return;
+      }
+      const text = encodeURIComponent(buildShareText().replace(/\\n/g, '\n'));
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+      window.open(url, '_blank');
+    }
+
+    function closeModal() {
+      document.getElementById('modal-bg').classList.remove('visible');
+    }
+
+    async function confirmSubmit() {
+      const name = document.getElementById('voter-name').value.trim();
+      state.voterName = name;
+      state.submitted = true;
+      state.submittedAt = new Date().toISOString();
+      saveState();
+
+      // Send to backend if configured
+      if (BACKEND_URL) {
+        try {
+          await fetch(BACKEND_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: name,
+              votes: state.votes,
+              timestamp: state.submittedAt,
+            }),
+          });
+        } catch (e) {
+          console.warn('Backend submit failed', e);
+        }
+      }
+
+      closeModal();
+      renderAll();
+      showToast('¡Gracias por tu selección!', 'success');
+      // Show the share option as well
+      renderSubmittedScreen();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ============================================
+    // COUNTDOWN
+    // ============================================
+    function isClosed() {
+      return new Date() >= DEADLINE;
+    }
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = DEADLINE - now;
+      const cd = document.getElementById('countdown');
+
+      if (diff <= 0) {
+        document.getElementById('cd-d').textContent = '00';
+        document.getElementById('cd-h').textContent = '00';
+        document.getElementById('cd-m').textContent = '00';
+        document.getElementById('cd-s').textContent = '00';
+        if (isClosed() && !cd.dataset.closed) {
+          cd.dataset.closed = '1';
+          renderAll();
+        }
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hrs = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const min = Math.floor((diff / (1000 * 60)) % 60);
+      const sec = Math.floor((diff / 1000) % 60);
+
+      document.getElementById('cd-d').textContent = String(days).padStart(2, '0');
+      document.getElementById('cd-h').textContent = String(hrs).padStart(2, '0');
+      document.getElementById('cd-m').textContent = String(min).padStart(2, '0');
+      document.getElementById('cd-s').textContent = String(sec).padStart(2, '0');
+
+      if (days === 0 && hrs < 24) {
+        cd.classList.add('urgent');
+      }
+    }
+
+    // ============================================
+    // RESULTS AGGREGATION
+    // ============================================
+    // For per-device result preview, count this device's own votes.
+    // To aggregate votes across all devices, set BACKEND_URL above.
+    function countAllVotes() {
+      const tallies = {};
+      state.votes.forEach(id => {
+        tallies[id] = (tallies[id] || 0) + 1;
+      });
+      return tallies;
+    }
+
+    // ============================================
+    // SUBMITTED SCREEN
+    // ============================================
+    function renderSubmittedScreen() {
+      // Replace the submit bar with a thank-you bar that includes a share option
+      const bar = document.getElementById('submit-bar');
+      bar.classList.add('visible');
+      bar.innerHTML = `
+        <div class="submit-info">
+          <strong>✓ Ya votaste</strong> · ${state.votes.length} artículo${state.votes.length === 1 ? '' : 's'}
+        </div>
+        <button class="submit-btn submit-btn-secondary" onclick="shareWhatsApp()">
+          💬 Compartir por WhatsApp
+        </button>
+      `;
+    }
+
+    // ============================================
+    // TOAST
+    // ============================================
+    let toastTimer = null;
+    function showToast(msg, type = '') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast visible ' + type;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        t.classList.remove('visible');
+      }, 3000);
+    }
+
+    // ============================================
+    // INIT
+    // ============================================
+    loadState();
+    renderAll();
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
