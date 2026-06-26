@@ -724,8 +724,11 @@
     // ============================================
     const DEADLINE = new Date('2026-06-24T12:00:00'); // ⬅️ Fecha límite de la encuesta
     const STORAGE_KEY = 'celucenter_encuesta_v1';
-    const BACKEND_URL = 'https://deadline-pairs-prostores-advertise.trycloudflare.com/api/encuesta/vote'; // ⬅️ Backend del bot de kilometraje
-    const RESULTS_URL = 'https://deadline-pairs-prostores-advertise.trycloudflare.com/api/encuesta/results'; // ⬅️ Endpoint de resultados en tiempo real
+    // ⬇️ Apps Script Web App URL — pegar aquí la URL /exec de Google Apps Script.
+    //    Dejar '' para modo solo-local (los votos NO se agregan entre dispositivos).
+    //    La URL es la misma para votos y resultados (Apps Script maneja doPost y doGet).
+    const BACKEND_URL = ''; // ⬅️ Pegar URL /exec de Apps Script aquí
+    const RESULTS_URL = BACKEND_URL;
     const WHATSAPP_NUMBER = '523414386105'; // ⬅️ Número al que se manda el resumen por WhatsApp
 
     const PRODUCTS = [
@@ -816,32 +819,76 @@
       if (!isClosed()) return;
       const results = document.getElementById('results');
       const list = document.getElementById('results-list');
-      const tallies = countAllVotes();
+      // Mostrar placeholder mientras llegan los datos del backend
+      results.classList.add('visible');
+      list.innerHTML = '<p style="text-align:center;padding:30px;color:#888;">Cargando resultados…</p>';
+      loadAndRenderResults(list);
+    }
+
+    async function loadAndRenderResults(list) {
+      let tallies = {};
+      let total = 0;
+      let source = 'local';
+      let duplicates = 0;
+
+      // Intentar traer resultados agregados del backend (Google Apps Script / Sheets)
+      if (RESULTS_URL) {
+        try {
+          const resp = await fetch(RESULTS_URL, { method: 'GET', redirect: 'follow' });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data && typeof data === 'object') {
+              tallies = data.tallies || {};
+              total = data.total || 0;
+              duplicates = data.duplicates || 0;
+              source = 'backend';
+            }
+          }
+        } catch (e) {
+          console.warn('No se pudo conectar al backend, usando datos locales', e);
+        }
+      }
+
+      // Fallback: votos solo de este dispositivo (localStorage)
+      if (source === 'local') {
+        tallies = countAllVotes();
+        total = 0;
+        Object.values(tallies).forEach(v => total += v);
+      }
+
       const sorted = Object.entries(tallies).sort((a, b) => b[1] - a[1]);
 
       if (sorted.length === 0) {
         list.innerHTML = '<p style="text-align:center;padding:30px;color:#888;">Aún no hay votos registrados.</p>';
-      } else {
-        list.innerHTML = sorted.map(([id, count], idx) => {
-          const p = PRODUCTS.find(x => x.id === id);
-          if (!p) return '';
-          return `
-            <div class="result-item">
-              <div class="result-rank">${idx + 1}</div>
-              <div class="result-thumb"><img src="${p.img}" alt="${p.id}"></div>
-              <div class="result-info">
-                <div class="result-code">${p.id}</div>
-                <div class="result-name">${p.name} · $${p.price.toFixed(2)}</div>
-              </div>
-              <div class="result-votes">
-                <div class="count">${count}</div>
-                <div class="label">${count === 1 ? 'voto' : 'votos'}</div>
-              </div>
-            </div>
-          `;
-        }).join('');
+        return;
       }
-      results.classList.add('visible');
+
+      const meta = `
+        <div style="text-align:center;padding:8px 0 20px;color:#666;font-size:14px;">
+          🗳️ <strong>${total}</strong> ${total === 1 ? 'gerente votó' : 'gerentes votaron'}
+          ${source === 'local' ? ' · <em style="color:#c01430">(solo este dispositivo, no hay backend configurado)</em>' : ''}
+          ${duplicates > 0 ? ` · <em style="color:#888">${duplicates} duplicado${duplicates === 1 ? '' : 's'} ignorado${duplicates === 1 ? '' : 's'}</em>` : ''}
+        </div>
+      `;
+
+      list.innerHTML = meta + sorted.map(([id, count], idx) => {
+        const p = PRODUCTS.find(x => x.id === id);
+        if (!p) return '';
+        return `
+          <div class="result-item">
+            <div class="result-rank">${idx + 1}</div>
+            <div class="result-thumb"><img src="${p.img}" alt="${p.id}"></div>
+            <div class="result-info">
+              <div class="result-code">${p.id}</div>
+              <div class="result-name">${p.name} · $${p.price.toFixed(2)}</div>
+            </div>
+            <div class="result-votes">
+              <div class="count">${count}</div>
+              <div class="label">${count === 1 ? 'voto' : 'votos'}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     function renderAll() {
@@ -952,33 +999,40 @@
       state.submittedAt = new Date().toISOString();
       saveState();
 
-      // Send to backend
+      // Enviar al backend (Google Apps Script / Sheets)
       if (BACKEND_URL) {
         try {
+          // Apps Script NO soporta CORS preflight para POST con application/json.
+          // Usamos text/plain (request "simple") y mandamos JSON en el body.
+          // Apps Script recibe el string en e.postData.contents y lo parsea.
           const resp = await fetch(BACKEND_URL, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'ngrok-skip-browser-warning': '1',
-            },
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
               name: name,
               votes: state.votes,
               timestamp: state.submittedAt,
             }),
+            redirect: 'follow',
           });
           if (!resp.ok) throw new Error('Backend ' + resp.status);
-          const r = await resp.json();
-          showToast('¡Voto registrado! Total: ' + r.total_ballots, 'success');
+          const r = await resp.json().catch(() => ({}));
+          const total = r.total_ballots ?? r.total;
+          if (typeof total === 'number') {
+            showToast('¡Voto registrado! (' + total + ' en total)', 'success');
+          } else {
+            showToast('¡Voto registrado!', 'success');
+          }
         } catch (e) {
           console.warn('Backend submit failed', e);
           showToast('Voto guardado localmente (sin conexión al servidor)', '');
         }
+      } else {
+        showToast('Voto guardado localmente (sin backend configurado)', '');
       }
 
       closeModal();
       renderAll();
-      showToast('¡Gracias por tu selección!', 'success');
       // Show the share option as well
       renderSubmittedScreen();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1026,8 +1080,8 @@
     // ============================================
     // RESULTS AGGREGATION
     // ============================================
-    // For per-device result preview, count this device's own votes.
-    // To aggregate votes across all devices, set BACKEND_URL above.
+    // Cuenta solo los votos guardados en este dispositivo (localStorage).
+    // Para resultados agregados de TODOS los dispositivos, usar loadAndRenderResults() que lee del backend.
     function countAllVotes() {
       const tallies = {};
       state.votes.forEach(id => {
