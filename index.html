@@ -302,13 +302,6 @@
       margin-top: 2px;
     }
 
-    .product-price {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--red);
-      margin-top: 6px;
-    }
-
     .product-vote {
       width: 100%;
       margin-top: 10px;
@@ -609,7 +602,6 @@
       .products { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
       .product-body { padding: 10px 12px 12px; }
       .product-name { font-size: 12px; }
-      .product-price { font-size: 16px; }
       .product-vote { padding: 8px 10px; font-size: 12px; }
       .submit-bar { flex-direction: column; align-items: stretch; text-align: center; }
       .result-item { grid-template-columns: 32px 60px 1fr auto; gap: 10px; }
@@ -791,7 +783,6 @@
             <div class="product-code">${p.id}</div>
             <div class="product-name">${p.name}</div>
             <div class="product-meta">${p.desc}</div>
-            <div class="product-price">$${p.price.toFixed(2)}</div>
             <button class="product-vote ${voted ? 'voted' : ''}"
                     onclick="toggleVote('${p.id}')"
                     ${state.submitted || closed ? 'disabled' : ''}>
@@ -880,7 +871,7 @@
             <div class="result-thumb"><img src="${p.img}" alt="${p.id}"></div>
             <div class="result-info">
               <div class="result-code">${p.id}</div>
-              <div class="result-name">${p.name} · $${p.price.toFixed(2)}</div>
+              <div class="result-name">${p.name}</div>
             </div>
             <div class="result-votes">
               <div class="count">${count}</div>
